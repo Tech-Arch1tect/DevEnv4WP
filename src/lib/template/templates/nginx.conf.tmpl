@@ -1,0 +1,78 @@
+upstream php74 {
+        server php74-fpm:9000;
+}
+upstream php80 {
+        server php80-fpm:9000;
+}
+upstream php81 {
+        server php81-fpm:9000;
+}
+upstream php82 {
+        server php82-fpm:9000;
+}
+{{ range $key, $value := . }}
+server {
+        listen 80;
+        listen 443 ssl http2;
+        ssl_certificate /etc/nginx/ssl/{{ $value.Hostname }}.crt;
+        ssl_certificate_key /etc/nginx/ssl/{{ $value.Hostname }}.key;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers         HIGH:!aNULL:!MD5;
+
+        server_name {{ $value.Hostname }};
+        root /var/www/html/{{ $value.Hostname }}/;
+        index index.php;
+
+        location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+        }
+
+        location / {
+                try_files $uri $uri/ /index.php?$args;
+        }
+
+        location ~ \.php$ {
+                include fastcgi_params;
+                fastcgi_intercept_errors on;
+                {{if eq $value.Php_version "7.4"}}
+                fastcgi_pass php74;
+                {{else if eq $value.Php_version "8.0"}}
+                fastcgi_pass php80;
+                {{else if eq $value.Php_version "8.1"}}
+                fastcgi_pass php81;
+                {{else if eq $value.Php_version "8.2"}}
+                fastcgi_pass php82;
+                {{end}}
+                fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        }
+}
+{{ end }}
+
+server {
+        listen 80;
+        listen 443 ssl http2;
+        ssl_certificate /etc/nginx/ssl/pma.local.crt;
+        ssl_certificate_key /etc/nginx/ssl/pma.local.key;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers         HIGH:!aNULL:!MD5;
+        server_name pma.local;
+        index index.php;
+        location / {
+                proxy_pass http://phpmyadmin:80;
+        }
+}
+
+server {
+        listen 80;
+        listen 443 ssl http2;
+        ssl_certificate /etc/nginx/ssl/mailpit.local.crt;
+        ssl_certificate_key /etc/nginx/ssl/mailpit.local.key;
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers         HIGH:!aNULL:!MD5;
+        server_name mailpit.local;
+        index index.php;
+        location / {
+                proxy_pass http://mailpit:8025;
+        }
+}

@@ -1,0 +1,75 @@
+version: '3.9'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - '127.0.0.1:80:80'
+      - '127.0.0.1:443:443'
+    volumes:
+      - ./data/html:/var/www/html
+      - ./data/nginx-hostnames.conf:/etc/nginx/conf.d/default.conf
+      - ./data/certs:/etc/nginx/ssl/
+    networks:
+      - devenv4wp
+  php74-fpm:
+    image: techarchitect/devenv4wpphp:7.4-{{ .Version }}
+    user: '{{ .Userid }}:{{ .Groupid }}'
+    volumes:
+      - ./data/html:/var/www/html
+      - ./config/custom-php7.4.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - devenv4wp
+  php80-fpm:
+    image: techarchitect/devenv4wpphp:8.0-{{ .Version }}
+    user: '{{ .Userid }}:{{ .Groupid }}'
+    volumes:
+      - ./data/html:/var/www/html
+      - ./config/custom-php8.0.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - devenv4wp
+  php81-fpm:
+    image: techarchitect/devenv4wpphp:8.1-{{ .Version }}
+    user: '{{ .Userid }}:{{ .Groupid }}'
+    volumes:
+      - ./data/html:/var/www/html
+      - ./config/custom-php8.1.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - devenv4wp
+  php82-fpm:
+    image: techarchitect/devenv4wpphp:8.2-{{ .Version }}
+    user: '{{ .Userid }}:{{ .Groupid }}'
+    volumes:
+      - ./data/html:/var/www/html
+      - ./config/custom-php8.2.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - devenv4wp
+  mariadb:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    user: '{{ .Userid }}:{{ .Groupid }}'
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+    ports:
+      - '127.0.0.1:3306:3306'
+    networks:
+      - devenv4wp
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      PMA_USER: root
+      PMA_PASSWORD: password
+    networks:
+      - devenv4wp
+  mailpit:
+    restart: unless-stopped
+    image: axllent/mailpit:latest
+    networks:
+      - devenv4wp
+networks:
+  devenv4wp:
+    driver: bridge

@@ -17,6 +17,7 @@ func Start() {
 	utils.ExitIfError(utils.CreateDir("./data/html"))
 	utils.ExitIfError(utils.CreateDir("./data/certs"))
 	utils.ExitIfError(utils.CreateDir("./data/.wp-cli"))
+	utils.ExitIfError(utils.CreateDir("./data/mariadb"))
 	utils.ExitIfError(utils.CreateDir("./config"))
 	utils.ExitIfError(docker.RunCommandContainer("chmod 777 /data/.wp-cli -R", configuration.Configuration{Userid: 0, Groupid: 0, Version: conf.Version}))
 	utils.ExitIfError(utils.CreateEmptyFile("./data/html/index.php"))

@@ -1,12 +1,11 @@
 package configuration
 
-// TODO: add bind address
-
 type Configuration struct {
-	Sites   map[string]Site `yaml:"sites" validate:"required,dive,min=1"`
-	Userid  int             `yaml:"userid" validate:"required"`
-	Groupid int             `yaml:"groupid" validate:"required"`
-	Version string          `validate:"required"`
+	Sites       map[string]Site `yaml:"sites" validate:"required,dive,min=1"`
+	Userid      int             `yaml:"userid" validate:"required"`
+	Groupid     int             `yaml:"groupid" validate:"required"`
+	Version     string          `validate:"required"`
+	BindAddress string          `yaml:"bind_address" validate:"required,ipv4"`
 }
 
 type Site struct {

@@ -30,7 +30,7 @@ My aim with this project was to support all major OS's (Windows through WSL2, Ma
 
 #### TODO
 
-- Add configurable bind address
+- ~~Add configurable bind address~~
 - Add apache support (.htaccess support is important in some cases)
 - Review code base (this was originally written for necessity / quickly and without much consideration of clean code)
 - Add `fix-ownership` command for the rare case ownership may be incorrect.

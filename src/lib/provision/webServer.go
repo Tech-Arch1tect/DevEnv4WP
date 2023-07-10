@@ -7,6 +7,19 @@ import (
 	"github.com/tech-arch1tect/DevEnv4WP/lib/utils"
 )
 
+func ProvisionWeb(conf configuration.Configuration) error {
+	if conf.WebServer == "nginx" {
+		return ProvisionNginx(conf.Sites)
+	} else if conf.WebServer == "apache" {
+		return ProvisionApache(conf.Sites)
+	}
+	return nil
+}
+
+func ProvisionApache(sites map[string]configuration.Site) error {
+	return template.EmbededTemplate("apache.conf.tmpl", sites, "data/apache-hostnames.conf")
+}
+
 func ProvisionNginx(sites map[string]configuration.Site) error {
 	return template.EmbededTemplate("nginx.conf.tmpl", sites, "data/nginx-hostnames.conf")
 }

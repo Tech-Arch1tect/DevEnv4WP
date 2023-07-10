@@ -6,6 +6,7 @@ type Configuration struct {
 	Groupid     int             `yaml:"groupid" validate:"required"`
 	Version     string          `validate:"required"`
 	BindAddress string          `yaml:"bind_address" validate:"required,ipv4"`
+	WebServer   string          `yaml:"web_server" validate:"required,oneof=nginx apache"`
 }
 
 type Site struct {

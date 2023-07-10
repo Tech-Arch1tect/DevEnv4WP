@@ -40,7 +40,7 @@ func Start() {
 	utils.ExitIfError(provision.ProvisionWpConfig(conf))
 	fmt.Println("Provisioning Databases and Users...")
 	for _, site := range conf.Sites {
-		utils.ExitIfError(provision.CreateDBAndUser(site.Hostname))
+		utils.ExitIfError(provision.CreateDBAndUser(conf, site.Hostname))
 	}
 	provision.PrintSummary(conf.Sites)
 }

@@ -5,11 +5,12 @@ import (
 	"time"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/tech-arch1tect/DevEnv4WP/lib/configuration"
 	"github.com/tech-arch1tect/DevEnv4WP/lib/utils"
 )
 
-func getDB() (*sql.DB, error) {
-	connectionString := "root:password@tcp(127.0.0.1:3306)/"
+func getDB(conf configuration.Configuration) (*sql.DB, error) {
+	connectionString := "root:password@tcp(" + conf.BindAddress + ":3306)/"
 	utils.DebugLog("Waiting for DB to be ready: " + connectionString)
 	err := WaitForDB(connectionString)
 	if err != nil {
@@ -43,14 +44,14 @@ func WaitForDB(conString string) error {
 	return nil
 }
 
-func CreateDBAndUser(dbName string) error {
+func CreateDBAndUser(conf configuration.Configuration, dbName string) error {
 	utils.DebugLog("CreateDBAndUser started: " + dbName)
-	err := CreateDatabase(dbName)
+	err := CreateDatabase(conf, dbName)
 	if err != nil {
 		utils.DebugLog("CreateDatabase error: " + err.Error())
 		return err
 	}
-	err = CreateDBUserWithPrivileges(dbName)
+	err = CreateDBUserWithPrivileges(conf, dbName)
 	if err != nil {
 		utils.DebugLog("CreateDBUserWithPrivileges error: " + err.Error())
 		return err
@@ -59,8 +60,8 @@ func CreateDBAndUser(dbName string) error {
 	return nil
 }
 
-func CreateDatabase(dbName string) error {
-	db, err := getDB()
+func CreateDatabase(conf configuration.Configuration, dbName string) error {
+	db, err := getDB(conf)
 	if err != nil {
 		return err
 	}
@@ -79,8 +80,8 @@ func CreateDatabase(dbName string) error {
 	return nil
 }
 
-func CreateDBUserWithPrivileges(dbName string) error {
-	db, err := getDB()
+func CreateDBUserWithPrivileges(conf configuration.Configuration, dbName string) error {
+	db, err := getDB(conf)
 	if err != nil {
 		return err
 	}

@@ -22,7 +22,7 @@ This tool focusses on ease-of-use. DO NOT use DevEnv4WP in production, it is loc
 
 #### Stateless
 
-- This software holds no state. Everytime the environment is started all provisioning measures are taken (e.g. wp is installed if not already, db created if not already etc.). This works well, however it does not clean up after it's self. e.g. if one.wordpress.local is provisioned, and then is removed from the configuration file, it will be removed from the nginx configuration however the DB will not be removed and neither will the files on-disk. To cleanup & remove or reset the environment, the easiest method is `devenv4wp stop` & `rm -rf data/`.
+This software holds no state. Everytime the environment is started all provisioning measures are taken (e.g. wp is installed if not already, db created if not already etc.). This works well, however it does not clean up after it's self. e.g. if one.wordpress.local is provisioned, and then is removed from the configuration file, it will be removed from the nginx configuration however the DB will not be removed and neither will the files on-disk. To cleanup & remove or reset the environment, the easiest method is `devenv4wp stop` & `rm -rf data/`.
 
 #### Backstory
 
@@ -35,4 +35,5 @@ My aim with this project was to support all major OS's (Windows through WSL2, Ma
 - Review code base (this was originally written for necessity / quickly and without much consideration of clean code)
 - Add `fix-ownership` command for the rare case ownership may be incorrect.
 - Unit tests
+- Documentation
 - Probably a lot of stuff I can't think of at the moment

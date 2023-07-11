@@ -13,11 +13,11 @@ func PrintSummary(sites map[string]configuration.Site) {
 	}
 	fmt.Println("\nServices are provisioned and listening on localhost.")
 	fmt.Println("IMPORTANT: Your hosts file should have the following entry:")
-	fmt.Println("127.0.0.1 pma.local mailpit.local" + sitesString)
+	fmt.Println("127.0.0.1 devenv4wp.local" + sitesString)
 
 	fmt.Println("\nOnce you have added the above entry to your hosts file, you can access the following services:")
-	fmt.Println("phpMyAdmin: https://pma.local")
-	fmt.Println("Mailpit: https://mailpit.local")
+	fmt.Println("phpMyAdmin: https://devenv4wp.local/phpmyadmin/")
+	fmt.Println("Mailpit: https://devenv4wp.local/mailpit/")
 	for _, site := range sites {
 		fmt.Println(site.Hostname + ": https://" + site.Hostname)
 	}

@@ -95,28 +95,31 @@ LogLevel warn
 {{ end }}
 
 <VirtualHost *:80>
-    ServerName mailpit.local
-    ProxyPass / http://mailpit:8025/
+    ServerName devenv4wp.local
+    RewriteEngine on
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
+    RewriteRule /mailpit/(.*) "ws://mailpit:8025/$1" [P,L]
+
+    ProxyRequests off
+    ProxyPass /mailpit/ http://mailpit:8025/
+    ProxyPass /phpmyadmin/ http://phpmyadmin:80/
+    ProxyPassReverse /mailpit/ http://mailpit:8025/
+    ProxyPassReverse /phpmyadmin/ http://phpmyadmin:80
 </VirtualHost>
 <VirtualHost *:443>
-    ServerName mailpit.local
-    ProxyPass / http://mailpit:8025/
+    ServerName devenv4wp.local
+    RewriteEngine on
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
+    RewriteRule /mailpit/(.*) "ws://mailpit:8025/$1" [P,L]
+
+    ProxyRequests off
+    ProxyPass /mailpit/ http://mailpit:8025/
+    ProxyPass /phpmyadmin/ http://phpmyadmin:80/
+    ProxyPassReverse /mailpit/ http://mailpit:8025/
+    ProxyPassReverse /phpmyadmin/ http://phpmyadmin:80
     SSLEngine On
-    SSLCertificateFile /usr/local/apache2/conf/ssl/mailpit.local.crt
-    SSLCertificateKeyFile /usr/local/apache2/conf/ssl/mailpit.local.key
-    SSLProtocol -all +TLSv1.2 +TLSv1.3
-    SSLCipherSuite HIGH:!aNULL:!MD5
-</VirtualHost>
-<VirtualHost *:80>
-    ServerName pma.local
-    ProxyPass / http://phpmyadmin:80/
-</VirtualHost>
-<VirtualHost *:443>
-    ServerName pma.local
-    ProxyPass / http://phpmyadmin:80/
-    SSLEngine On
-    SSLCertificateFile /usr/local/apache2/conf/ssl/pma.local.crt
-    SSLCertificateKeyFile /usr/local/apache2/conf/ssl/pma.local.key
+    SSLCertificateFile /usr/local/apache2/conf/ssl/devenv4wp.local.crt
+    SSLCertificateKeyFile /usr/local/apache2/conf/ssl/devenv4wp.local.key
     SSLProtocol -all +TLSv1.2 +TLSv1.3
     SSLCipherSuite HIGH:!aNULL:!MD5
 </VirtualHost>

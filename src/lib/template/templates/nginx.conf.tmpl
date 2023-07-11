@@ -52,27 +52,19 @@ server {
 server {
         listen 80;
         listen 443 ssl http2;
-        ssl_certificate /etc/nginx/ssl/pma.local.crt;
-        ssl_certificate_key /etc/nginx/ssl/pma.local.key;
+        ssl_certificate /etc/nginx/ssl/devenv4wp.local.crt;
+        ssl_certificate_key /etc/nginx/ssl/devenv4wp.local.key;
         ssl_protocols TLSv1.2 TLSv1.3;
         ssl_ciphers         HIGH:!aNULL:!MD5;
-        server_name pma.local;
+        server_name devenv4wp.local;
         index index.php;
-        location / {
-                proxy_pass http://phpmyadmin:80;
+        location /phpmyadmin/ {
+                proxy_pass http://phpmyadmin:80/;
         }
-}
-
-server {
-        listen 80;
-        listen 443 ssl http2;
-        ssl_certificate /etc/nginx/ssl/mailpit.local.crt;
-        ssl_certificate_key /etc/nginx/ssl/mailpit.local.key;
-        ssl_protocols TLSv1.2 TLSv1.3;
-        ssl_ciphers         HIGH:!aNULL:!MD5;
-        server_name mailpit.local;
-        index index.php;
-        location / {
-                proxy_pass http://mailpit:8025;
+        location /mailpit/ {
+                proxy_pass http://mailpit:8025/;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "Upgrade";
         }
 }

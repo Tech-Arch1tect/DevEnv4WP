@@ -38,5 +38,5 @@ func Version() string {
 	if flags.Dev {
 		return "dev"
 	}
-	return "v0.0.1"
+	return "v0.0.2"
 }

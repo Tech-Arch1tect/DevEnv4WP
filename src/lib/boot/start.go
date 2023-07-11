@@ -44,5 +44,5 @@ func Start() {
 	for _, site := range conf.Sites {
 		utils.ExitIfError(provision.CreateDBAndUser(conf, site.Hostname))
 	}
-	provision.PrintSummary(conf.Sites)
+	provision.PrintSummary(conf)
 }

@@ -95,6 +95,9 @@ LogLevel warn
 {{ end }}
 
 <VirtualHost *:80>
+    <Directory "/usr/local/apache2/htdocs">
+        DirectoryIndex index.html
+    </Directory>
     ServerName devenv4wp.local
     RewriteEngine on
     RewriteCond %{HTTP:Upgrade} =websocket [NC]
@@ -107,6 +110,9 @@ LogLevel warn
     ProxyPassReverse /phpmyadmin/ http://phpmyadmin:80
 </VirtualHost>
 <VirtualHost *:443>
+    <Directory "/usr/local/apache2/htdocs">
+        DirectoryIndex index.html
+    </Directory>
     ServerName devenv4wp.local
     RewriteEngine on
     RewriteCond %{HTTP:Upgrade} =websocket [NC]

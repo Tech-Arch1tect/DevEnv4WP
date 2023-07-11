@@ -1,0 +1,125 @@
+ServerRoot "/usr/local/apache2"
+Listen 80
+Listen 443
+LoadModule mpm_event_module modules/mod_mpm_event.so
+LoadModule authn_file_module modules/mod_authn_file.so
+LoadModule authn_core_module modules/mod_authn_core.so
+LoadModule authz_host_module modules/mod_authz_host.so
+LoadModule authz_groupfile_module modules/mod_authz_groupfile.so
+LoadModule authz_user_module modules/mod_authz_user.so
+LoadModule authz_core_module modules/mod_authz_core.so
+LoadModule access_compat_module modules/mod_access_compat.so
+LoadModule auth_basic_module modules/mod_auth_basic.so
+LoadModule reqtimeout_module modules/mod_reqtimeout.so
+LoadModule filter_module modules/mod_filter.so
+LoadModule mime_module modules/mod_mime.so
+LoadModule log_config_module modules/mod_log_config.so
+LoadModule env_module modules/mod_env.so
+LoadModule headers_module modules/mod_headers.so
+LoadModule setenvif_module modules/mod_setenvif.so
+LoadModule version_module modules/mod_version.so
+LoadModule unixd_module modules/mod_unixd.so
+LoadModule status_module modules/mod_status.so
+LoadModule autoindex_module modules/mod_autoindex.so
+LoadModule proxy_module modules/mod_proxy.so
+LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so
+LoadModule proxy_http_module modules/mod_proxy_http.so
+LoadModule dir_module modules/mod_dir.so
+LoadModule alias_module modules/mod_alias.so
+LoadModule rewrite_module modules/mod_rewrite.so
+LoadModule ssl_module modules/mod_ssl.so
+
+<IfModule unixd_module>
+User www-data
+Group www-data
+</IfModule>
+<Files ".ht*">
+    Require all denied
+</Files>
+ErrorLog /proc/self/fd/2
+LogLevel warn
+<IfModule log_config_module>
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" combined
+    LogFormat "%h %l %u %t \"%r\" %>s %b" common
+    <IfModule logio_module>
+      LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
+    </IfModule>
+    CustomLog /proc/self/fd/1 common
+</IfModule>
+
+{{ range $key, $value := . }}
+<VirtualHost *:80>
+    ServerName {{ $value.Hostname }}
+    DocumentRoot "/var/www/html/{{ $value.Hostname }}"
+    <Directory "/var/www/html/{{ $value.Hostname }}">
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php
+        FallbackResource /index.php
+    </Directory>
+    {{ if eq $value.Php_version "7.4" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php74-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.0" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php80-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.1" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php81-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.2" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php82-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ end }}
+</VirtualHost>
+
+<VirtualHost *:443>
+    ServerName {{ $value.Hostname }}
+    DocumentRoot "/var/www/html/{{ $value.Hostname }}"
+    <Directory "/var/www/html/{{ $value.Hostname }}">
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php
+        FallbackResource /index.php
+    </Directory>
+    {{ if eq $value.Php_version "7.4" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php74-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.0" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php80-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.1" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php81-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.2" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php82-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ end }}
+    SSLEngine On
+    SSLCertificateFile /usr/local/apache2/conf/ssl/{{ $value.Hostname }}.crt
+    SSLCertificateKeyFile /usr/local/apache2/conf/ssl/{{ $value.Hostname }}.key
+    SSLProtocol -all +TLSv1.2 +TLSv1.3
+    SSLCipherSuite HIGH:!aNULL:!MD5
+</VirtualHost>
+{{ end }}
+
+<VirtualHost *:80>
+    ServerName devenv4wp.local
+    RewriteEngine on
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
+    RewriteRule /mailpit/(.*) "ws://mailpit:8025/$1" [P,L]
+
+    ProxyRequests off
+    ProxyPass /mailpit/ http://mailpit:8025/
+    ProxyPass /phpmyadmin/ http://phpmyadmin:80/
+    ProxyPassReverse /mailpit/ http://mailpit:8025/
+    ProxyPassReverse /phpmyadmin/ http://phpmyadmin:80
+</VirtualHost>
+<VirtualHost *:443>
+    ServerName devenv4wp.local
+    RewriteEngine on
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
+    RewriteRule /mailpit/(.*) "ws://mailpit:8025/$1" [P,L]
+
+    ProxyRequests off
+    ProxyPass /mailpit/ http://mailpit:8025/
+    ProxyPass /phpmyadmin/ http://phpmyadmin:80/
+    ProxyPassReverse /mailpit/ http://mailpit:8025/
+    ProxyPassReverse /phpmyadmin/ http://phpmyadmin:80
+    SSLEngine On
+    SSLCertificateFile /usr/local/apache2/conf/ssl/devenv4wp.local.crt
+    SSLCertificateKeyFile /usr/local/apache2/conf/ssl/devenv4wp.local.key
+    SSLProtocol -all +TLSv1.2 +TLSv1.3
+    SSLCipherSuite HIGH:!aNULL:!MD5
+</VirtualHost>

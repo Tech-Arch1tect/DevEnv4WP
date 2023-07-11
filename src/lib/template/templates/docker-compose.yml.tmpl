@@ -1,6 +1,7 @@
 version: '3.9'
 
 services:
+{{ if eq .WebServer "nginx" }}
   nginx:
     image: nginx:latest
     ports:
@@ -12,6 +13,19 @@ services:
       - ./data/certs:/etc/nginx/ssl/
     networks:
       - devenv4wp
+{{ else if eq .WebServer "apache" }}
+  apache:
+    image: httpd:latest
+    ports:
+      - '{{ .BindAddress }}:80:80'
+      - '{{ .BindAddress }}:443:443'
+    volumes:
+      - ./data/html:/var/www/html
+      - ./data/apache-hostnames.conf:/usr/local/apache2/conf/httpd.conf
+      - ./data/certs:/usr/local/apache2/conf/ssl/
+    networks:
+      - devenv4wp
+{{ end }}
   php74-fpm:
     image: techarchitect/devenv4wpphp:7.4-{{ .Version }}
     user: '{{ .Userid }}:{{ .Groupid }}'

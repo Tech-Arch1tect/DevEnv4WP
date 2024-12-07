@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/image"
 	"github.com/tech-arch1tect/DevEnv4WP/lib/utils"
 )
 
-func pullDockerImage(image string) error {
+func pullDockerImage(i string) error {
 	ctx := context.Background()
 	client, err := GetClient()
 	if err != nil {
@@ -20,19 +21,19 @@ func pullDockerImage(image string) error {
 	// check if image exists
 	_, _, err = client.ImageInspectWithRaw(
 		ctx,
-		image,
+		i,
 	)
 	if err == nil {
-		utils.DebugLog("pullDockerImage (ImageInspectWithRaw) image exists: " + image)
+		utils.DebugLog("pullDockerImage (ImageInspectWithRaw) image exists: " + i)
 		return nil
 	}
-	utils.DebugLog("pullDockerImage (ImageInspectWithRaw) image does not exist: " + image + ". Pulling image")
+	utils.DebugLog("pullDockerImage (ImageInspectWithRaw) image does not exist: " + i + ". Pulling image")
 
 	// Pull image
 	out, err := client.ImagePull(
 		ctx,
-		image,
-		types.ImagePullOptions{},
+		i,
+		image.PullOptions{},
 	)
 	if err != nil {
 		utils.DebugLog("pullDockerImage (ImagePull) error" + err.Error())
@@ -69,7 +70,7 @@ func removeContainerIfExists(containerName string) error {
 	err = client.ContainerRemove(
 		ctx,
 		conatinerID,
-		types.ContainerRemoveOptions{},
+		container.RemoveOptions{},
 	)
 	if err != nil {
 		utils.DebugLog("Remove container error (remove container): " + err.Error())
@@ -88,7 +89,7 @@ func getContainerIDbyName(containerName string) (string, error) {
 	}
 	defer client.Close()
 
-	containers, err := client.ContainerList(ctx, types.ContainerListOptions{
+	containers, err := client.ContainerList(ctx, container.ListOptions{
 		All: true,
 	})
 	if err != nil {

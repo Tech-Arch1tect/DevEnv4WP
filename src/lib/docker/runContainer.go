@@ -6,7 +6,6 @@ import (
 	"io"
 	"strings"
 
-	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/tech-arch1tect/DevEnv4WP/lib/utils"
 )
@@ -55,7 +54,7 @@ func RunContainerWithCommand(command string, uid int, gid int, image string, nam
 	err = client.ContainerStart(
 		ctx,
 		runContainer.ID,
-		types.ContainerStartOptions{},
+		container.StartOptions{},
 	)
 	if err != nil {
 		utils.DebugLog("Error starting container: " + name)
@@ -82,7 +81,7 @@ func RunContainerWithCommand(command string, uid int, gid int, image string, nam
 	out, err := client.ContainerLogs(
 		ctx,
 		runContainer.ID,
-		types.ContainerLogsOptions{ShowStdout: true},
+		container.LogsOptions{ShowStdout: true},
 	)
 	if err != nil {
 		utils.DebugLog("Error getting container logs: " + name)

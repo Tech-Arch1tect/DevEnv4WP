@@ -1,7 +1,7 @@
 package configuration
 
 type Configuration struct {
-	Sites       map[string]Site `yaml:"sites" validate:"required,dive,min=1"`
+	Sites       map[string]Site `yaml:"sites" validate:"required,min=1,dive"`
 	Userid      int             `yaml:"userid" validate:"required"`
 	Groupid     int             `yaml:"groupid" validate:"required"`
 	Version     string          `validate:"required"`

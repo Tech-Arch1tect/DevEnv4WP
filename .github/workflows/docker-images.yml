@@ -62,3 +62,21 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/devenv4wpphp:8.2-dev
+
+
+      - name: PHP 8.3 - Build and push Docker image
+        uses: docker/build-push-action@v3.2.0
+        with:
+          context: ./Dockerfiles/php/8.3
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/devenv4wpphp:8.3-dev
+
+
+      - name: PHP 8.4 - Build and push Docker image
+        uses: docker/build-push-action@v3.2.0
+        with:
+          context: ./Dockerfiles/php/8.4
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/devenv4wpphp:8.4-dev

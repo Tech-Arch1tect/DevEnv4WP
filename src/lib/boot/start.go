@@ -23,7 +23,7 @@ func Start() {
 	utils.ExitIfError(docker.RunCommandContainer("chmod 777 /data/.wp-cli -R", configuration.Configuration{Userid: 0, Groupid: 0, Version: conf.Version}))
 	utils.ExitIfError(utils.CreateEmptyFile("./data/html/index.php"))
 	fmt.Println("Provisioning PHP Configurations...")
-	utils.ExitIfError(provision.ProvisionPHPConfigurations([]string{"7.4", "8.0", "8.1", "8.2"}))
+	utils.ExitIfError(provision.ProvisionPHPConfigurations([]string{"7.4", "8.0", "8.1", "8.2", "8.3", "8.4"}))
 	fmt.Println("Provisioning SSL Certificates...")
 	utils.ExitIfError(provision.ProvisionCertificates(conf))
 	fmt.Println("Provisioning Web Server Configurations...")

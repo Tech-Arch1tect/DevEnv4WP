@@ -12,7 +12,7 @@ This tool focusses on ease-of-use. DO NOT use DevEnv4WP in production, it is loc
 
 - Automatically provision multiple local WP sites (inculding database, Nginx configuration, etc)
 - Custom PHP ini configuration
-- Configurable PHP version per-site (7.4, 8.0, 8.1 and 8.2 currently supported)
+- Configurable PHP version per-site (7.4, 8.0, 8.1, 8.2, 8.3 and 8.4 currently supported)
 - Mailpit configured automatically to intercept emails
 - PHPMyAdmin configured with automatic root login
 

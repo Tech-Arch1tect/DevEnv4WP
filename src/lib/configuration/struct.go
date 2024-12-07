@@ -11,5 +11,5 @@ type Configuration struct {
 
 type Site struct {
 	Hostname    string `yaml:"hostname" validate:"required,hostname"`
-	Php_version string `yaml:"php_version" validate:"required,oneof=7.4 8.0 8.1 8.2"`
+	Php_version string `yaml:"php_version" validate:"required,oneof=7.4 8.0 8.1 8.2 8.3 8.4"`
 }

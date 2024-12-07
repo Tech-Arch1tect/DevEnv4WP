@@ -60,6 +60,14 @@ services:
       - ./config/custom-php8.2.ini:/usr/local/etc/php/conf.d/custom.ini
     networks:
       - devenv4wp
+  php83-fpm:
+    image: techarchitect/devenv4wpphp:8.3-{{ .Version }}
+    user: '{{ .Userid }}:{{ .Groupid }}'
+    volumes:
+      - ./data/html:/var/www/html
+      - ./config/custom-php8.3.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - devenv4wp
   mariadb:
     image: mariadb
     environment:

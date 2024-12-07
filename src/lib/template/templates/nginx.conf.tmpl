@@ -10,6 +10,9 @@ upstream php81 {
 upstream php82 {
         server php82-fpm:9000;
 }
+upstream php83 {
+        server php83-fpm:9000;
+}
 {{ range $key, $value := . }}
 server {
         listen 80;
@@ -43,6 +46,10 @@ server {
                 fastcgi_pass php81;
                 {{else if eq $value.Php_version "8.2"}}
                 fastcgi_pass php82;
+                {{else if eq $value.Php_version "8.3"}}
+                fastcgi_pass php83;
+                {{else if eq $value.Php_version "8.4"}}
+                fastcgi_pass php84;
                 {{end}}
                 fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
         }

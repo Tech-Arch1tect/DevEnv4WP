@@ -65,6 +65,10 @@ LogLevel warn
         ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php81-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
     {{ else if eq $value.Php_version "8.2" }}
         ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php82-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.3" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php83-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.4" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php84-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
     {{ end }}
 </VirtualHost>
 
@@ -85,6 +89,10 @@ LogLevel warn
         ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php81-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
     {{ else if eq $value.Php_version "8.2" }}
         ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php82-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.3" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php83-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
+    {{ else if eq $value.Php_version "8.4" }}
+        ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://php84-fpm:9000/var/www/html/{{ $value.Hostname }}/$1
     {{ end }}
     SSLEngine On
     SSLCertificateFile /usr/local/apache2/conf/ssl/{{ $value.Hostname }}.crt
